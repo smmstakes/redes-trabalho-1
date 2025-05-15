@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crie notas sobre python</title>
+    <style>
+      body {
+        text-align: center;
+        background-color: black;
+        color: white;
+      }
+      a {
+        font-family: Helvetica;
+      }
+      h2 {
+        font-family: Helvetica;
+      }
+      label {
+        font-family: Helvetica;
+      }
+      button {
+        background-color: #3d3d3d;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .main-text {
+        font-size: 2em;
+        font-weight: bold;
+        padding: 30px;
+        margin: 0;
+        font-family: 'Helvetica';
+      }
+      .sub-text {
+        font-size: 1em;
+        padding: 30px;
+        font-family: 'Helvetica', Arial, sans-serif;
+      }
+
+      .text {
+        text-align: center;
+        color: white;
+        font-family: 'Helvetica', Arial, sans-serif;
+      }
+
+      .submit-button {
+        background-color: #3d3d3d;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .sign-up-inbutton {
+        color: white;
+        text-align: center;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="main-text">Python Notebot</h1>
+
+    <img
+      src="{{url_for('static', filename='home.png')}}"
+      alt="home image"
+      height="200"
+    />
+
+    <p class="sub-text">
+      A partir de notas sobre python, crie insights valiosos
+    </p>
+
+    {% if sign_up == True %}
+    <h2>Sign-up</h2>
+    <form action="{{url_for('sign_up')}}" method="POST">
+      <label for="name">Nome:</label><br />
+      <input
+        style="border-radius: 5px; border-color: white"
+        type="text"
+        id="name"
+        name="name"
+        required
+        title="Preencha o campo"
+      /><br /><br />
+      <label for="password">Senha:</label><br />
+      <input
+        style="border-radius: 5px; border-color: white"
+        type="password"
+        id="password"
+        name="password"
+        required
+        title="Preencha o campo"
+      /><br /><br />
+      <input class="submit-button" type="submit" value="Entrar" /><br /><br />
+    </form>
+
+    <a href="/login" class="sign-up-inbutton" type="submit">Já tem conta?</a>
+
+    {% if invalid_credentials == True %}
+    <h5 class="text" style="color: red">Usuário inserido em uso</h5>
+    {% endif %} {% else %}
+    <h2>Log-in</h2>
+    <form action="{{url_for('login')}}" method="POST">
+      <label for="name">Nome:</label><br />
+      <input type="text" id="name" name="name" required /><br /><br />
+      <label for="password">Senha:</label><br />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+      /><br /><br />
+      <input class="submit-button" type="submit" value="Entrar" /><br /><br />
+    </form>
+
+    <a href="/sign_up" class="sign-up-inbutton" type="submit">Não tem conta?</a>
+    {% if invalid_credentials == True %}
+    <h5 class="text" style="color: red">Insira usuário e senha válidos</h5>
+    {% endif %} {% endif %}
+  </body>
+</html>
