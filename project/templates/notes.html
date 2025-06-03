@@ -1,116 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My notes</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: sans-serif;
-        background-color: white;
-      }
-      .button {
-        background-color: #3d3d3d;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
 
-      .navbar {
-        overflow: hidden;
-        background-color: black;
-        padding: 20px 10px;
-        display: flex;
-        align-items: center;
-      }
+<head>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-light.min.css">
 
-      .navbar img {
-        width: 50px;
-        height: 50px;
-        margin-right: 20px;
-      }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My notes</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background-color: white;
+    }
 
-      .navbar a {
-        color: white;
-        text-decoration: none;
-        padding: 10px 15px;
-        font-size: 16px;
-      }
-      .logout-btn {
-        margin-left: auto;
-        background-color: black;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      .main-text {
-        font-size: 2em;
-        color: white;
-        font-weight: bold;
-        margin: 0;
-        font-family: 'Helvetica';
-      }
-      .content {
-        padding: 50px;
-        align-items: center;
-        text-align: center;
-      }
-      .note-box {
-        margin: auto;
-        text-align: left;
-        background-color: #f5f5f5;
-        border: 1px solid #ddd;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        width: 50%;
-      }
-    </style>
-  </head>
-  <body>
-    <header class="navbar">
-      <img src="{{url_for('static', filename='home.png')}}" height="50px" />
-      <h1 class="main-text">Python Notebot</h1>
+    .button {
+      background-color: #3d3d3d;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
 
-      {% if not_login != True %}
-      <form style="margin-left: auto" action="{{url_for('logout')}}">
-        <input class="logout-btn" type="submit" value="Logout" />
-      </form>
-      {% endif %}
-    </header>
+    .navbar {
+      overflow: hidden;
+      background-color: black;
+      padding: 20px 10px;
+      display: flex;
+      align-items: center;
+    }
 
-    <main class="content">
-      {% if not_login == True %}
-      <p>Você não está logado</p>
+    .navbar img {
+      width: 50px;
+      height: 50px;
+      margin-right: 20px;
+    }
 
-      <form action="{{url_for('login')}}" method="GET">
-        <input class="button" type="submit" value="Vamos lá!" />
-      </form>
-      {% else %}
-      <a class="button" href="/new">+ Crie uma nova nota</a><br /><br />
-      {% for note in notes %}
-      <div class="note-box">
-        <h2>{{note.name}}</h2> 
-        <h4>Minha nota:</h3>
-          {{note.notes}}
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 15px;
+      font-size: 16px;
+    }
+
+    .logout-btn {
+      margin-left: auto;
+      background-color: black;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .main-text {
+      font-size: 2em;
+      color: white;
+      font-weight: bold;
+      margin: 0;
+      font-family: 'Helvetica';
+    }
+
+    .content {
+      padding: 30;
+      align-items: center;
+      text-align: center;
+    }
+
+    .note-box {
+      margin: auto;
+      text-align: left;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 30px;
+      margin-bottom: 20px;
+      border-radius: 16px;
+      width: 50%;
+    }
+
+    .nota-complementada-block {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      /* Makes corners nicely rounded */
+      padding: 20px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      /* Optional: subtle shadow for depth */
+    }
+  </style>
+</head>
+
+<body>
+  <header class="navbar">
+    <img src="{{url_for('static', filename='home.png')}}" height="50px" />
+    <h1 class="main-text">Python Notebot</h1>
+
+    {% if not_login != True %}
+    <form style="margin-left: auto" action="{{url_for('logout')}}">
+      <input class="logout-btn" type="submit" value="Logout" />
+    </form>
+    {% endif %}
+  </header>
+
+  <main class="content">
+    {% if not_login == True %}
+    <p>Você não está logado</p>
+    <br /><br />
+    <form action="{{url_for('login')}}" method="GET">
+      <input class="button" type="submit" value="Vamos lá!" />
+    </form>
+    {% else %}
+    <br />
+    <a class="button" href="/new">+ Crie uma nova nota</a><br /><br />
+    {% for note in notes %}
+    <div class="note-box">
+      <h2>{{note.name}}</h2>
+      <h4>Minha nota:</h3>
+        {{note.notes}}
         <h4>Nota complementada</h4>
-          {{note.assistant_bot_notes}}
+        <div class="nota-complementada-block">
+          <div class="markdown-body">
+            {{ note.assistant_bot_notes_html | safe }}
+          </div>
+        </div>
+
         <br /><br>
         <a class="button" href="/edit/{{note.id}}">Editar</a>
         <a class="button" href="/delete/{{note.id}}">Apagar</a>
-      </div>
-      {% endfor %} {% endif %}
-    </main>
-  </body>
+    </div>
+    {% endfor %} {% endif %}
+  </main>
+</body>
+
 </html>
