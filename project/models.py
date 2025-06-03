@@ -25,7 +25,9 @@ app.secret_key = os.getenv('APP_SECRET_KEY')
 app.app_context().push()
 
 # Creating OpenAI client
-client: OpenAI = OpenAI(api_key=os.getenv('OPEN_AI_KEY'))
+client: OpenAI = OpenAI(
+    api_key=os.getenv('OPEN_AI_KEY'), base_url='https://api.perplexity.ai'
+)
 
 # Creating forward refs
 User = ForwardRef('User')
@@ -35,7 +37,7 @@ Note = ForwardRef('Note')
 class DB:
     '''
     DB class
-    
+
     Class containing methods to create tables and add, commit, delete data to db.
     '''
 
@@ -82,7 +84,7 @@ class DB:
 class User(db.Model):
     '''
     User class.
-    
+
     Create new user objects.
     '''
 
@@ -106,9 +108,9 @@ class User(db.Model):
     ) -> bool:
         '''
         Verifies whether the user's credentials are valid for login.
-        
+
         Takes a name and a password.
-        
+
         Returns true if the name is found in the database and the password matches
         and false whether the name isn't found or the password is invalid.
         '''
@@ -117,10 +119,12 @@ class User(db.Model):
         return False
 
     @staticmethod
-    def verify_credentials_sign_up(name: str = None, ) -> bool:
+    def verify_credentials_sign_up(
+        name: str = None,
+    ) -> bool:
         '''
         Verifies whether the user's credentials are valid for sign-up.
-        
+
         Takes a name and returns true if the name is found in the database
         and false whether it isn't.
         '''
@@ -140,7 +144,7 @@ class User(db.Model):
 class AssistantBot:
     '''
     AssistantBot class
-    
+
     This class is where the ChatGPT API is used.
     '''
 
@@ -154,14 +158,14 @@ class AssistantBot:
         return AssistantBot.__instance
 
     def __init__(self) -> None:
-        self.__model: str = 'gpt-3.5-turbo-0125'
+        self.__model: str = 'sonar-pro'
         self.__response_format: dict[str, str] = {'type': 'text'}
 
     def prompt(self, prompt: str) -> str:
         '''
-        Takes a string as prompt and returns a response generated based 
+        Takes a string as prompt and returns a response generated based
         on said prompt.
-        
+
         All of the responses are based on Python concepts.
         '''
 
@@ -171,15 +175,15 @@ class AssistantBot:
             response_format=self.__response_format,
             messages=[
                 {
-                    'role':
-                    'system',
-                    'content':
-                    f'Com base na anotação passada como nota, elabore nos assuntos abordados sobre PYTHON, não use exemplos com markdown, simplesmente elabore nos assuntos'
+                    'role': 'system',
+                    'content': '''
+                                Você é um especialista em Python e Markdown,
+                                responda perguntas que são pertinentes com Python apenas,
+                                forneça exemplos de código caso seja adequado, contudo não insira comentários
+                                no código. 
+                                ''',
                 },
-                {
-                    'role': 'user',
-                    'content': prompt
-                },
+                {'role': 'user', 'content': prompt},
             ],
         )
 
@@ -191,9 +195,9 @@ class AssistantBot:
 class Note(db.Model):
     '''
     Note class for creating new notes.
-    
+
     This class manages the AssistantBot class with Aggregation.
-    
+
     This class is also responsible for formatting the prompt of the Assistant bot,
     being the middle man between the prompt and it's log into the database.
     '''
@@ -228,11 +232,5 @@ class Note(db.Model):
         to the value obtained from its assistant bot property's prompt.
         '''
 
-        # Getting prompt
-        prompt = self.assistant_bot.prompt(self.notes)
-
-        # Getting date
-        today = date.today().strftime('%d/%m/%Y')
-
         # Setting assistant bot notes to decorated prompt
-        self.assistant_bot_notes = f'{today}: {prompt}'
+        self.assistant_bot_notes = self.assistant_bot.prompt(self.notes)
