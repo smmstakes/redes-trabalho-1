@@ -14,10 +14,12 @@ h11
 httpcore
 httpx
 idna
+ipykernel
 itsdangerous
 jinja2
 jiter
 libuuid
+markdown
 markupsafe
 openai
 pip
