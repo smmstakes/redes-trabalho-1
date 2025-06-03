@@ -1,101 +1,96 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Python Notebot | new note</title>
-    <style>
-      body {
-        text-align: center;
-        background-color: black;
-        color: white;
-      }
-      a {
-        font-family: Helvetica;
-      }
-      h4 {
-        font-family: Helvetica;
-      }
-      label {
-        font-family: Helvetica;
-      }
-      .submit-button {
-        background-color: #3d3d3d;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
-      }
-      .note-field {
-        width: 400px;
-        height: 100px;
-      }
-    </style>
-  </head>
-  <body>
-    <section id="new">
-      <a href="">
-        <img
-          src="{{ url_for('static', filename='home.png')}}"
-          alt=""
-          height="300"
-        />
-      </a>
 
-      <div id="card">
-        {% if edit != True %}
-        <h4>Nova Nota</h4>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Notebot | new note</title>
+  <style>
+    body {
+      text-align: center;
+      background-color: black;
+      color: white;
+    }
 
-        <form action="{{url_for('new_note')}}" method="POST">
-          <div class="label-float">
-            <label for="name">Nome</label> <br />
-            <input type="text" id="name" name="name" placeholder=" " required />
-          </div>
+    a {
+      font-family: Helvetica;
+    }
 
-          <div class="label-float">
-            <label for="notes">Notas</label><br />
-            <textarea
-              type="text"
-              name="notes"
-              placeholder=" "
-              rows="10"
-              cols="50"
-              required
-            ></textarea>
-          </div>
-          <br />
+    h4 {
+      font-family: Helvetica;
+    }
 
-          <div class="justify-center">
-            <button class="submit-button" type="submit">Criar</button
-            ><br /><br />
-            <a class="submit-button" href="/notes">Cancelar</a>
-          </div>
-        </form>
-        {% else %}
-        <h4>Editar nota</h4>
+    label {
+      font-family: Helvetica;
+    }
 
-        <form action="/edit/{{note.id}}" method="POST">
-          <div class="label-float">
-            <label for="name">Nome</label> <br />
-            <input type="text" id="name" name="name" placeholder=" " required />
-          </div>
-          <br />
+    .submit-button {
+      background-color: #3d3d3d;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
 
-          <div class="justify-center">
-            <button class="submit-button" type="submit">Confirmar</button
-            ><br /><br />
-            <a class="submit-button" href="/notes">Cancelar</a>
-          </div>
-        </form>
-        {% endif %}
-      </div>
-    </section>
-  </body>
+    .note-field {
+      width: 400px;
+      height: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <section id="new">
+    <a href="">
+      <img src="{{ url_for('static', filename='home.png')}}" alt="" height="300" />
+    </a>
+
+    <div id="card">
+      {% if edit != True %}
+      <h4>Nova Nota</h4>
+
+      <form action="{{url_for('new_note')}}" method="POST">
+        <div class="label-float">
+          <label for="name">Nome</label> <br />
+          <input type="text" id="name" name="name" placeholder=" " required />
+        </div>
+
+        <div class="label-float">
+          <label for="notes">Notas</label><br />
+          <textarea type="text" name="notes" placeholder=" " rows="10" cols="50" required></textarea>
+        </div>
+        <br />
+
+        <div class="justify-center">
+          <button class="submit-button" type="submit">Criar</button><br /><br />
+          <a class="submit-button" href="/notes">Cancelar</a>
+        </div>
+      </form>
+      {% else %}
+      <h4>Editar nota</h4>
+
+      <form action="/edit/{{note.id}}" method="POST">
+        <div class="label-float">
+          <label for="name">Nome</label> <br />
+          <input type="text" id="name" name="name" placeholder=" " required />
+        </div>
+        <br />
+
+        <div class="justify-center">
+          <button class="submit-button" type="submit">Confirmar</button><br /><br />
+          <a class="submit-button" href="/notes">Cancelar</a>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+  </section>
+</body>
+
 </html>
