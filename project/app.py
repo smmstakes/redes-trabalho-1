@@ -1,8 +1,35 @@
+from flask_wtf.csrf import CSRFProtect
+
+# Other imports
+import logging
+from markdown import markdown
+
 # Importing flask dependencies
 from flask import session, render_template, request, redirect, url_for
 
 # Importing classes and
 from models import DB, User, Note, AssistantBot, app
+
+# csrf = CSRFProtect(app)
+
+# logging.basicConfig(
+#     filename='network.log',
+#     level=logging.DEBUG,
+#     format='%(asctime)s - %(message)s',
+# )
+
+
+# @app.before_request
+# def log_request():
+
+#     logging.debug(
+#         f"""
+#         Request: {request.method} {request.path}
+#         Client IP: {request.remote_addr}
+#         Headers: {dict(request.headers)}
+#         Payload: {request.get_data()}
+#         """
+#     )
 
 
 # Onboarding
@@ -43,9 +70,11 @@ def sign_up():
         )
 
     # Rendering home page if user is not logged in else returning to private page
-    return redirect(
-        url_for('notes')) if 'name' in session else render_template(
-            'home.html', sign_up=True)
+    return (
+        redirect(url_for('notes'))
+        if 'name' in session
+        else render_template('home.html', sign_up=True)
+    )
 
 
 # Log-in
@@ -69,8 +98,11 @@ def login():
         return render_template('home.html', invalid_credentials=True)
 
     # Rendering home page if user is not logged in else returning to private page
-    return redirect(url_for(
-        'notes')) if 'name' in session else render_template('home.html')
+    return (
+        redirect(url_for('notes'))
+        if 'name' in session
+        else render_template('home.html')
+    )
 
 
 # Log-out
@@ -92,7 +124,11 @@ def notes():
     if 'name' in session:
         # Getting user's data
         user = User.get_user(session['name'])
-        notes = Note.query.filter_by(author_id=user.id)
+        notes = Note.query.filter_by(author_id=user.id).all()
+        notes.reverse()
+
+        for note in notes:
+            note.assistant_bot_notes_html = markdown(note.assistant_bot_notes)
 
         # Rendering template with user's notes and id
         return render_template('notes.html', notes=notes)
@@ -184,7 +220,30 @@ def delete(id):
     return render_template('notes.html', not_login=True)
 
 
+# @app.after_request
+# def add_headers(response):
+#     response.headers['X-App-Version'] = 'NoteBot/1.0'
+#     return response
+
+
+# @app.before_request
+# def log_request():
+#     logging.debug(
+#         f"Request: {request.method} {request.path} - Client: {request.remote_addr}"
+#     )
+
+
+# @app.route('/network_info')
+# def network_info():
+#     return {'server_ip': request.host, 'client_ip': request.remote_addr}
+
+
 if __name__ == '__main__':
     db = DB()
     db.create_all()
-    app.run(debug=True)
+
+    app.run(
+        host='0.0.0.0',
+        port=5000,
+        debug=True,
+    )
