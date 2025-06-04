@@ -19,7 +19,7 @@ from models import DB, User, Note, AssistantBot, app
 
 @app.after_this_request
 def add_header(response):
-    response.headers['X-Server-Software'] = 'Flask/2.3.2'
+    response.headers['Project-Name'] = 'PythonNoteBot'
     return response
 
 
