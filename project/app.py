@@ -1,5 +1,3 @@
-from flask_wtf.csrf import CSRFProtect
-
 # Other imports
 from markdown import markdown
 
@@ -10,14 +8,13 @@ from flask import (
     request,
     redirect,
     url_for,
-    after_this_request,
 )
 
 # Importing classes and
 from models import DB, User, Note, AssistantBot, app
 
 
-@app.after_this_request
+@app.after_request
 def add_header(response):
     response.headers['Project-Name'] = 'PythonNoteBot'
     return response
