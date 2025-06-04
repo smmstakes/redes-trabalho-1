@@ -1,7 +1,6 @@
 from flask_wtf.csrf import CSRFProtect
 
 # Other imports
-import logging
 from markdown import markdown
 
 # Importing flask dependencies
@@ -17,26 +16,11 @@ from flask import (
 # Importing classes and
 from models import DB, User, Note, AssistantBot, app
 
-# csrf = CSRFProtect(app)
 
-# logging.basicConfig(
-#     filename='network.log',
-#     level=logging.DEBUG,
-#     format='%(asctime)s - %(message)s',
-# )
-
-
-# @app.before_request
-# def log_request():
-
-#     logging.debug(
-#         f"""
-#         Request: {request.method} {request.path}
-#         Client IP: {request.remote_addr}
-#         Headers: {dict(request.headers)}
-#         Payload: {request.get_data()}
-#         """
-#     )
+@app.after_this_request
+def add_header(response):
+    response.headers['X-Server-Software'] = 'Flask/2.3.2'
+    return response
 
 
 # Onboarding
@@ -127,11 +111,6 @@ def logout():
 # Notes page
 @app.route('/notes', methods=['POST', 'GET'])
 def notes():
-    @after_this_request
-    def add_header(response):
-        response.headers['X-Server-Software'] = 'Flask/2.3.2'
-        return response
-
     # Checking if user is logged in
     if 'name' in session:
         # Getting user's data
@@ -230,24 +209,6 @@ def delete(id):
 
     # Rendering notes page with not login set to true
     return render_template('notes.html', not_login=True)
-
-
-# @app.after_request
-# def add_headers(response):
-#     response.headers['X-App-Version'] = 'NoteBot/1.0'
-#     return response
-
-
-# @app.before_request
-# def log_request():
-#     logging.debug(
-#         f"Request: {request.method} {request.path} - Client: {request.remote_addr}"
-#     )
-
-
-# @app.route('/network_info')
-# def network_info():
-#     return {'server_ip': request.host, 'client_ip': request.remote_addr}
 
 
 if __name__ == '__main__':
