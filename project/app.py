@@ -5,7 +5,14 @@ import logging
 from markdown import markdown
 
 # Importing flask dependencies
-from flask import session, render_template, request, redirect, url_for
+from flask import (
+    session,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    after_this_request,
+)
 
 # Importing classes and
 from models import DB, User, Note, AssistantBot, app
@@ -120,6 +127,11 @@ def logout():
 # Notes page
 @app.route('/notes', methods=['POST', 'GET'])
 def notes():
+    @after_this_request
+    def add_header(response):
+        response.headers['X-Server-Software'] = 'Flask/2.3.2'
+        return response
+
     # Checking if user is logged in
     if 'name' in session:
         # Getting user's data
